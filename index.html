@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador de Máquina de Turing - Validación de Tipo de Usuario</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Simulador de Máquina de Turing</h1>
+            <p class="subtitle">Validación de Tipo de Usuario (admin | guest | user)</p>
+        </header>
+
+        <div class="input-section">
+            <label for="inputString">Ingresa el tipo de usuario a validar:</label>
+            <div class="input-group">
+                <input type="text" id="inputString" placeholder="Ej: admin, guest o user" maxlength="20" autocomplete="off">
+                <button id="btnLoad" class="btn btn-primary">Cargar</button>
+            </div>
+        </div>
+
+        <div class="machine-section">
+            <div class="state-display">
+                <h3>Estado Actual:</h3>
+                <div id="stateDisplay" class="state-badge">q0</div>
+            </div>
+
+            <div class="tape-container">
+                <h3>Cinta de la Máquina de Turing</h3>
+                <div id="tapeContainer" class="tape"></div>
+            </div>
+
+            <div class="controls">
+                <button id="btnStep" class="btn btn-secondary" disabled>Paso</button>
+                <button id="btnRun" class="btn btn-secondary" disabled>Ejecutar</button>
+                <button id="btnReset" class="btn btn-warning" disabled>Reiniciar</button>
+            </div>
+        </div>
+
+        <div class="result-section">
+            <h3>Resultado:</h3>
+            <div id="resultDisplay" class="result-box">
+                <p>Esperando entrada...</p>
+            </div>
+        </div>
+
+        <div class="info-section">
+            <h3>Información</h3>
+            <ul>
+                <li><strong>Regex:</strong> <code>^(admin|guest|user)$</code></li>
+                <li><strong>Formato válido:</strong> Exactamente "admin", "guest" o "user"</li>
+                <li><strong>Ejemplos válidos:</strong> admin, guest, user</li>
+                <li><strong>Ejemplos inválidos:</strong> admin123, guest_user, usr, adm, gues</li>
+            </ul>
+        </div>
+
+        <div class="visual-section">
+            <h2>Diagrama del AFD</h2>
+            <div id="afdDiagram" class="afd-diagram-container">
+                <svg id="afdSvg" width="100%" height="600" viewBox="0 0 1100 600" preserveAspectRatio="xMidYMid meet"></svg>
+            </div>
+        </div>
+
+        <div class="visual-section">
+            <h2>Tabla de Transición</h2>
+            <div id="transitionTable" class="transition-table-container">
+                <table id="transitionTableContent" class="transition-table">
+                    <thead>
+                        <tr>
+                            <th>Estado Actual</th>
+                            <th>Símbolo Leído</th>
+                            <th>Símbolo Escrito</th>
+                            <th>Movimiento</th>
+                            <th>Estado Siguiente</th>
+                        </tr>
+                    </thead>
+                    <tbody id="transitionTableBody">
+                        <!-- Se llenará dinámicamente -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="visual-section">
+            <h2>Diseño de la MT que Emula el AFD</h2>
+            <div class="mt-design-container">
+                <div class="mt-restrictions">
+                    <h3>Restricciones de la MT</h3>
+                    <div class="restriction-card">
+                        <div class="restriction-icon">🚫</div>
+                        <div class="restriction-content">
+                            <strong>Restricción 1:</strong> El cabezal <strong>NUNCA</strong> se mueve a la izquierda
+                            <p>Solo se permite movimiento a la derecha (R) o quedarse (S)</p>
+                        </div>
+                    </div>
+                    <div class="restriction-card">
+                        <div class="restriction-icon">✏️</div>
+                        <div class="restriction-content">
+                            <strong>Restricción 2:</strong> La MT <strong>NUNCA</strong> escribe un símbolo diferente
+                            <p>Solo lee y mueve el cabezal, nunca modifica la cinta</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-afd-mapping">
+                    <h3>Correspondencia entre MT y AFD</h3>
+                    <div class="mapping-grid">
+                        <div class="mapping-box">
+                            <div class="mapping-side afd-side">
+                                <div class="side-label">AFD</div>
+                                <div class="side-value">Estado (q)</div>
+                            </div>
+                            <div class="mapping-arrow">→</div>
+                            <div class="mapping-side mt-side">
+                                <div class="side-label">MT</div>
+                                <div class="side-value">Registro de Estado</div>
+                                <div class="side-code">currentState</div>
+                            </div>
+                        </div>
+                        <div class="mapping-box">
+                            <div class="mapping-side afd-side">
+                                <div class="side-label">AFD</div>
+                                <div class="side-value">Símbolo de entrada</div>
+                            </div>
+                            <div class="mapping-arrow">→</div>
+                            <div class="mapping-side mt-side">
+                                <div class="side-label">MT</div>
+                                <div class="side-value">Símbolo leído de la cinta</div>
+                                <div class="side-code">tape[headPosition]</div>
+                            </div>
+                        </div>
+                        <div class="mapping-box">
+                            <div class="mapping-side afd-side">
+                                <div class="side-label">AFD</div>
+                                <div class="side-value">Función de transición δ</div>
+                            </div>
+                            <div class="mapping-arrow">→</div>
+                            <div class="mapping-side mt-side">
+                                <div class="side-label">MT</div>
+                                <div class="side-value">Tabla de transición</div>
+                                <div class="side-code">TRANSITIONS</div>
+                            </div>
+                        </div>
+                        <div class="mapping-box">
+                            <div class="mapping-side afd-side">
+                                <div class="side-label">AFD</div>
+                                <div class="side-value">Estados de aceptación F</div>
+                            </div>
+                            <div class="mapping-arrow">→</div>
+                            <div class="mapping-side mt-side">
+                                <div class="side-label">MT</div>
+                                <div class="side-value">Estados finales</div>
+                                <div class="side-code">ACCEPT_STATES</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-rules">
+                    <h3>Reglas de la MT (Formato: δ(q, a) = (q', movimiento))</h3>
+                    <div class="rules-explanation">
+                        <p><strong>Formato de cada regla:</strong></p>
+                        <div class="rule-format">
+                            <code>δ(Estado Actual, Símbolo Leído) = (Estado Siguiente, Movimiento)</code>
+                        </div>
+                        <p class="rule-note">
+                            <strong>Nota:</strong> La MT siempre escribe el mismo símbolo que lee (restricción 2), 
+                            por lo que no se especifica el símbolo a escribir en las reglas.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="main.js"></script>
+</body>
+</html>
