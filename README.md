@@ -59,9 +59,16 @@ La tabla de transición completa está disponible en la interfaz web del simulad
 
 ## Fase 2: El Repositorio
 
-**URL del repositorio:** [Añadir URL de GitHub]
+**URL del repositorio:** https://github.com/santi2113/maquina-de-turing
 
-**URL de GitHub Pages:** [Añadir URL de GitHub Pages]
+**URL de GitHub Pages:** https://santi2113.github.io/maquina-de-turing/
+
+> **Nota:** Para activar GitHub Pages:
+> 1. Ve a Settings → Pages en tu repositorio de GitHub
+> 2. En "Source", selecciona "Deploy from a branch"
+> 3. Branch: `main`, Folder: `/ (root)`
+> 4. Guarda y espera unos minutos
+> 5. Tu sitio estará disponible en la URL de arriba
 
 ## Fase 3: Estructura del Proyecto
 
